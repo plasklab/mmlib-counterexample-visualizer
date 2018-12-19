@@ -20,7 +20,7 @@
 ## 環境構築の例
 MacOSでEclipse2018-09のEclipse IDE for Java Developersに本ソフトウェアを導入する手順は以下の通りです．
 1. 公式サイトから[Eclipse IDE for Java Developers](https://www.eclipse.org/downloads/packages/release/2018-09/r/eclipse-ide-java-developers)をダウンロード・インストールする．
-2. 必要なソフトウェアをインストールする．メニューバーから「Help」 -> 「Install New Software」の順に選択し，開かれたダイアログの「Work with」テキストボックスのプルダウンメニューから 「2018-09 - http://download.eclipse.org/releases/2018-09」を選択する．
+2. 必要なソフトウェアをインストールする．メニューバーから「Help」 -> 「Install New Software」の順に選択し，開かれたダイアログの「Work with」テキストボックスのプルダウンメニューから 「2018-09 - http\://download.eclipse.org/releases/2018-09」を選択する．
 ダイアログの中央の表にダウンロード可能なソフトウェアの一覧が表示されるので，
   - SWTBot for Eclipse Testing
   - Eclipse Plug-in Development Environment  
