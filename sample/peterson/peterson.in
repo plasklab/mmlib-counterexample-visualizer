@@ -1,0 +1,3 @@
+want0 at 0
+want1 at next want0
+turn at next want1
