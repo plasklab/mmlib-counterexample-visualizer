@@ -13,6 +13,7 @@ chan queue[(PROCSIZE + 2) * VARSIZE] = [BUFFSIZE] of {int};
 /* commit operation */
 #define COMMIT_WRITE(i, j)\
 {\
+    printf("%d, %d\n", i-2, j);\
     queue[(i) * VARSIZE + (j)]?v ->\
     if\
       ::v != -1 ->\
@@ -24,6 +25,7 @@ chan queue[(PROCSIZE + 2) * VARSIZE] = [BUFFSIZE] of {int};
         int k = 0;\
         do\
           ::(k != j && len(queue[(i) * VARSIZE + k]) > 0) ->\
+            printf("%d, %d\n", i-2, k);\
             queue[(i) * VARSIZE + k]?v ->\
             if\
               ::v != -1 ->\
@@ -41,6 +43,7 @@ chan queue[(PROCSIZE + 2) * VARSIZE] = [BUFFSIZE] of {int};
             int l = 0;\
             do\
             ::(l < k) ->\
+              printf("w %d, %d\n", i-2, l);\
               queue[(i) * VARSIZE + l]!(-1);\
               l++;\
               gcounter++;\
@@ -72,7 +75,6 @@ endmem:
         r = gcounter;
         do
           ::(j < VARSIZE && len(queue[(i + 2) * VARSIZE + j]) > 0) ->
-            printf("%d, %d\n", i, j);
             COMMIT_WRITE(i + 2, j);
             break;
           ::(i < PROCSIZE - 1 && j >= VARSIZE) ->
@@ -95,8 +97,8 @@ endmem:
 #define WRITE(s, v)\
 {\
   atomic{\
-    (len(queue[(_pid) * VARSIZE + (s)]) < BUFFSIZE);\
     printf("WRITE\n");\
+    (len(queue[(_pid) * VARSIZE + (s)]) < BUFFSIZE);\
     int temp = v;\
     queue[(_pid) * VARSIZE + (s)]!temp;\
     buffer[(_pid) * VARSIZE + (s)] = temp;\
@@ -138,10 +140,13 @@ endmem:
 #define TFENCE(s)\
 {\
   atomic{\
+    printf("TFENCE\n");\
+    printf("%d\n", s);\
     do\
       ::(len(queue[(_pid) * VARSIZE + (s)]) > 0) -> COMMIT_WRITE(_pid, (s));\
       ::else -> break;\
     od;\
+    printf("TFENCE\n");\
   }\
 }
 
@@ -150,10 +155,12 @@ endmem:
 #define RFENCE()\
 {\
   atomic {\
+    printf("RFENCE\n");\
     int iterator = 0;\
     do\
       ::true ->\
         (len(queue[(_pid) * VARSIZE + (iterator)]) < BUFFSIZE);\
+        printf("do RFENCE\n");\
         queue[(_pid) * VARSIZE + (iterator)]!-1;\
         gcounter++;\
         iterator++;\
@@ -162,17 +169,8 @@ endmem:
           ::else -> skip;\
         fi;\
     od;\
-    iterator = 0\
-  }\
-}
-
-#define TFENCE(s)\
-{\
-  atomic{\
-    do\
-      ::(len(queue[(_pid) * VARSIZE + (s)]) > 0) -> COMMIT_WRITE(_pid, (s));\
-      ::else -> break;\
-    od;\
+    iterator = 0;\
+	printf("done RFENCE\n");\
   }\
 }
 

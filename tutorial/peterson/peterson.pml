@@ -3,13 +3,12 @@
 #define BUFFSIZE 5
 #include "pso.h"
 #define want0 0
-#define want1 1
-#define turn 2
+#define want1 (want0 + 1)
+#define turn (want1 + 1)
 
 proctype T0() {
   WRITE(want0, 1);
   WRITE(turn, 1);
-  FENCE();
   if
   ::(READ(turn) == 0)  -> skip;
   ::(READ(want1) == 0) -> skip;
@@ -21,7 +20,6 @@ CS: skip; /*Critical Section*/
 proctype T1() {
   WRITE(want1, 1);
   WRITE(turn, 0);
-  FENCE();
   if
   ::(READ(turn) == 1)  -> skip;
   ::(READ(want0) == 0) -> skip;

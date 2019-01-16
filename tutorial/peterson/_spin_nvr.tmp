@@ -1,0 +1,9 @@
+never prop {    /* !(! (<> (((T0@CS)) && ((T1@CS))))) */
+T0_init:
+	do
+	:: atomic { ((((T0@CS)) && ((T1@CS)))) -> assert(!((((T0@CS)) && ((T1@CS))))) }
+	:: (1) -> goto T0_init
+	od;
+accept_all:
+	skip
+}
